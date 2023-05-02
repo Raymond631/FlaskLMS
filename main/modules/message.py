@@ -14,3 +14,13 @@ class Message(db.Model):
         self.receiverid = receiverid
         self.data = data
         self.date = date
+
+    def to_json(self):
+        """
+        json序列化
+        :return:
+        """
+        dict = self.__dict__
+        if "_sa_instance_state" in dict:
+            del dict["_sa_instance_state"]
+        return dict
