@@ -2,26 +2,30 @@ from init import db
 
 
 class Book(db.Model):
-    id = db.Column(db.String(12), primary_key=True)
+    # TODO 为了方便,id暂时改为自增主键，待优化
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(255))
-    isbnCode = db.Column(db.String(10))
+    # 2007年1月1日之后出版的新书，必须编配新的ISBN-13位书号。
+    isbncode = db.Column(db.String(13))
     type = db.Column(db.String(255))
     introduce = db.Column(db.String(255))
     ownerid = db.Column(db.String(12))
     image = db.Column(db.String(255))
+    status = db.Column(db.Integer, autoincrement=False)
 
-    def __init__(self, bid, name, isbnCode, btype, introduce, ownerid, image):
-        self.id = bid
+    def __init__(self, name, isbncode, btype, introduce, ownerid, image, status):
+        # self.id = bid
         self.name = name
-        self.isbnCode = isbnCode
+        self.isbncode = isbncode
         self.type = btype
         self.introduce = introduce
         self.ownerid = ownerid
         self.image = image
+        self.status = status
 
-    def to_json(self):
+    def to_dict(self):
         """
-        json序列化
+        object转dict
         :return:
         """
         dict = self.__dict__

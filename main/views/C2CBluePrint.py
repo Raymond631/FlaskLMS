@@ -5,97 +5,62 @@
     对某一个C2C借书单的增删改查
     对所有C2C借书单的查询
 """
-from flask import Blueprint, render_template, request, redirect, json
+from datetime import datetime, timedelta
+
+from flask import Blueprint, render_template, request, redirect, json, jsonify, session
+
+from service import bookService, listService
 
 C2CBluePrint = Blueprint('C2CBluePrint', __name__)
 
 
-# 对图书馆内某一本书的增删改查
-@C2CBluePrint.route('/book', methods=['POST', 'DELETE', 'PUT', 'GET'])
-def book():
-
-    if request.method == 'POST':
-        # 新增书籍信息操作,根据传入json信息修改数据库
-        # 前端通过ajax传入json(book),后端返回简单字符串
-        # 通过搜索数据库分配id，将json解包后与id结合形成book对象，再结合session中用户信息插入数据库，返回操作结果提示
-        pass
-
-    if request.method == 'DELETE':
-        # 删除书籍信息操作,根据传入json信息修改数据库
-        # 前端通过ajax传入简单字符串(book的id),后端返回简单字符串
-        # 根据所传入book的id查找到该书,并完成对数据库中该书数据的删除
-        # 结果返回简单字符串,提示删除是否成功
-        pass
-
-    if request.method == 'PUT':
-        # 修改书籍信息操作,根据传入json信息修改数据库
-        # 前端通过ajax传入json(book对象),后端返回简单字符串
-        # 将json解包后为book后,根据所解包book的id查到到该书,并完成对数据库的修改
-        # 结果返回简单字符串,提示修改是否成功
-        pass
-
-    if request.method == 'GET':
-        # 查询书籍信息操作,返回json数据
-        # 前端通过ajax传入json(含(searchKey)和(times)),后端返回json
-        # 从数据库中搜索searchKey相关数据,将搜索到的book对象根据times作为List并打包为json传出
-        pass
+# 查看我上传的书
+@C2CBluePrint.route('/books/mine/<int:times>', methods=['GET'])
+def c2cGetMyBooks(times):
+    userid = session['userid']
+    books = bookService.getMyBooks(userid, times)
+    return jsonify(code=200, msg=books)
 
 
-@C2CBluePrint.route('/books', methods=['GET'])
-def books():
-    # 查询所有书籍信息操作,返回json数据
-    # 前端通过ajax传入简单字符串(times),后端返回json
-    # times为计数器,将其转为int查看是第几次请求,(下将其int值计为n)
-    # 从数据库中搜寻第n*10-n*10+9共十个不以library为拥有者的book对象book对象,作为List并打包为json传出
-    pass
+# 查看我收到的申请
+@C2CBluePrint.route('/books/requireMe/<int:times>', methods=['GET'])
+def c2cGetRequireMe(times):
+    userid = session['userid']
+    requires = bookService.getRequireMe(userid, times)
+    return jsonify(code=200, msg=requires)
 
 
-@C2CBluePrint.route('/recommendBooks', methods=['GET'])
-def recommendBooks():
-    # 返回当前用户推荐书籍
-    # 前端传入简单字符串(times),后端返回json
-    # 获取session中user对象,根据user对象查询借书单,推荐算法得到关键词,搜索关键词相关书籍
-    # 并根据times选择部分作为List并打包为json传出
-    pass
+# 查看我申请的
+@C2CBluePrint.route('/books/myRequire/<int:times>', methods=['GET'])
+def c2cGetMyRequire(times):
+    userid = session['userid']
+    requires = bookService.getMyRequire(userid, times)
+    return jsonify(code=200, msg=requires)
 
 
-@C2CBluePrint.route('/list', methods=['POST', 'DELETE', 'PUT', 'GET'])
-def l1st():
-    # 注意此处为了不与关键词list冲突将函数名改为了l1st
-
-    if request.method == 'POST':
-        # 用户操作,新增借书单信息操作,根据传入json信息修改数据库
-        # 前端通过ajax传入简单字符串(Book的id),后端返回简单字符串
-        # 先从response中获取用户对象,判断是否可以借阅(借阅到达上限/欠费),若不可借书,提醒不可借书原因
-        # 若可借书,则完成相关业务后返回成功信息
-        pass
-
-    if request.method == 'DELETE':
-        # 管理员操作,删除借书单信息操作,根据传入json信息修改数据库
-        # 前端通过ajax传入简单字符串(list的id),后端返回简单字符串
-        # 解包json获得list对象，并判断此书单是否已欠费，若欠费则提醒缴费，若此单无欠费则进行数据库的删除操作
-        # 将操作结果或错误提醒作为简单字符串返回
-        pass
-
-    if request.method == 'PUT':
-        # 管理员操作,修改借书单信息操作,根据传入json信息修改数据库
-        # 前端通过ajax传入json(list),后端返回简单字符串
-        # 解包json获得list对象，进行数据库的修改操作
-        # 将操作结果作为简单字符串返回
-        pass
-
-    if request.method == 'GET':
-        # 管理员操作,查询借书单信息操作
-        # 前端通过ajax传入json(searchKey,times),后端返回json(list)
-        # 根据查searchKey找list，结合他times检索出部分作为list，打包为json后传出
-        pass
+# 借书人发送请求
+@C2CBluePrint.route('/books/sendRequire', methods=['POST'])
+def sendRequire():
+    userid = session['userid']
+    require = request.get_json()
+    bookService.sendRequire(userid, require['ownerid'], require['bookid'], require['bookname'], 0)
+    return jsonify(code=200, msg="已发送申请")
 
 
-@C2CBluePrint.route('/lists', methods=['GET'])
-def lists():
-    # 查询所有借书单信息操作,返回json数据
-    # 前端通过ajax传入简单字符串(times),后端返回json
-    # times为计数器,将其转为int查看是第几次请求,(下将其int值计为n)
-    # 从数据库中搜寻第n*10-n*10+9共十个list对象,作为List并打包为json传出
-    pass
+# 拥有者审核
+@C2CBluePrint.route('/books/checkRequire/<int:requireId>/<int:bookId>/<int:status>', methods=['UPDATE'])
+def checkRequire(requireId, bookId, status):
+    code = bookService.checkRequire(requireId, bookId, status)
+    if code == 1:
+        return jsonify(code=200, msg="借出成功")
+    elif code == -1:
+        return jsonify(code=400, msg="借出失败，该书已被借走")
+    elif code == 0:
+        return jsonify(code=200, msg="拒绝成功")
 
+
+# 拥有者标记还书
+@C2CBluePrint.route('/books/returnBookToMe/<int:bookId>', methods=['UPDATE'])
+def returnBookToMe(bookId):
+    bookService.returnBookToMe(bookId)
+    return jsonify(code=200, msg="已归还")

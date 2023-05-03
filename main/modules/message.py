@@ -2,22 +2,21 @@ from init import db
 
 
 class Message(db.Model):
-    id = db.Column(db.String(12), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     speakerid = db.Column(db.String(12))
     receiverid = db.Column(db.String(12))
-    data = db.Column(db.String)
+    msg = db.Column(db.String)
     date = db.Column(db.DateTime)
 
-    def __init__(self, mid, speakerid, receiverid, data, date):
-        self.id = mid
+    def __init__(self, speakerid, receiverid, msg, date):
         self.speakerid = speakerid
         self.receiverid = receiverid
-        self.data = data
+        self.msg = msg
         self.date = date
 
-    def to_json(self):
+    def to_dict(self):
         """
-        json序列化
+        object转dict
         :return:
         """
         dict = self.__dict__

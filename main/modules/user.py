@@ -17,9 +17,9 @@ class User(db.Model):
         self.introduce = introduce
         self.type = type
 
-    def to_json(self):
+    def to_dict(self):
         """
-        json序列化
+        object转dict
         :return:
         """
         dict = self.__dict__

@@ -46,11 +46,21 @@ def selectUserInfo(userid):
 
 def selectAllCommonUser(times):
     # 查看除了超管外的所有用户
-    return User.query.filter(User.type != 2).paginate(page=times, per_page=10, error_out=False)
+    userPaginate = User.query.filter(User.type != 2).paginate(page=times, per_page=9, error_out=False)
+    num = userPaginate.pages * 9  # 总数(假设每页都满，对前端没影响)
+    users = []
+    for user in userPaginate.items:
+        users.append(user.to_dict())
+    return {"num": num, "users": users}
 
 
 def selectAllUser(times):
-    return User.query.paginate(page=times, per_page=10, error_out=False)
+    userPaginate = User.query.paginate(page=times, per_page=9, error_out=False)
+    num = userPaginate.pages * 9  # 总数(假设每页都满，对前端没影响)
+    users = []
+    for user in userPaginate.items:
+        users.append(user.to_dict())
+    return {"num": num, "users": users}
 
 
 def resetPassword(userid, password):
