@@ -21,6 +21,7 @@ def addBorrowRecord(userType, lenderid, bookid, dateNow):
     else:
         # 修改书籍状态为“已借出”
         book.status = 0
+        book.lenderid = lenderid
         db.session.commit()
         # 插入借书表
         dataNowStr = dateNow.strftime('%Y-%m-%d %H:%M:%S')
@@ -35,6 +36,7 @@ def returnBook(borrowListId):
     # 还书
     borrowedBook = BorrowList.query.filter_by(BorrowList.id == borrowListId).first()
     borrowedBook.status = 1
+    borrowedBook.lenderid = ""  # 重置借阅者为空字符串
     db.session.commit()
     # 是否超时
     overtime = (datetime.now() - datetime.strptime(borrowedBook.return_deadline, '%Y-%m-%d %H:%M:%S')).total_seconds() / 3600 / 24  # 超过截止时间多少天

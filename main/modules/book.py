@@ -12,8 +12,9 @@ class Book(db.Model):
     ownerid = db.Column(db.String(12))
     image = db.Column(db.String(255))
     status = db.Column(db.Integer, autoincrement=False)
+    lenderid = db.Column(db.String(12))
 
-    def __init__(self, name, isbncode, btype, introduce, ownerid, image, status):
+    def __init__(self, name, isbncode, btype, introduce, ownerid, image, status, lenderid):
         # self.id = bid
         self.name = name
         self.isbncode = isbncode
@@ -22,6 +23,7 @@ class Book(db.Model):
         self.ownerid = ownerid
         self.image = image
         self.status = status
+        self.lenderid = lenderid
 
     def to_dict(self):
         """
