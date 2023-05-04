@@ -4,7 +4,7 @@ from modules.book import Book
 from modules.BorrowList import BorrowList
 
 
-def getAllBooks(times, bookType):
+def getAllBooks(bookType, times):
     bookPaginate = Book.query.filter(Book.type == bookType).paginate(page=times, per_page=9, error_out=False)
     num = bookPaginate.pages * 9  # 总数(假设每页都满，对前端没影响)
     books = []

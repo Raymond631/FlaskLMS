@@ -1,10 +1,11 @@
 """
 只有管理员、超级管理员可以访问
 """
+from datetime import datetime
 
 from flask import Blueprint, session, jsonify, request
 
-from service import userService, bookService, listService
+from service import userService, bookService, listService, messageService
 
 AdminBluePrint = Blueprint('AdminBluePrint', __name__)
 
@@ -71,7 +72,27 @@ def returnBook(borrowListId):
 """---------------------------------公告发布模块---------------------------------"""
 
 
-# TODO 管理员发布公告，用sadmin的身份发送
 @AdminBluePrint.route('/notice', methods=['POST'])
 def addNotice():
-    pass
+    userid = session['userid']
+    data = request.get_json()
+    content = data['content']
+    lastModified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    messageService.addNotice(userid, content, lastModified)
+    return jsonify(code=200, msg="发布成功")
+
+
+@AdminBluePrint.route('/notice/<int:id>', methods=['DELETE'])
+def deleteNotice(id):
+    messageService.deleteNotice(id)
+    return jsonify(code=200, msg="删除成功")
+
+
+@AdminBluePrint.route('/notice/<int:id>', methods=['UPDATE'])
+def updateNotice(id):
+    userid = session['userid']
+    data = request.get_json()
+    content = data['content']
+    lastModified = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    messageService.updateNotice(id, userid, content, lastModified)
+    return jsonify(code=200, msg="修改成功")

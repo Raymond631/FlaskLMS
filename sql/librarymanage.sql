@@ -11,7 +11,7 @@
  Target Server Version : 80032 (8.0.32)
  File Encoding         : 65001
 
- Date: 04/05/2023 17:11:57
+ Date: 04/05/2023 19:47:20
 */
 
 SET NAMES utf8mb4;
@@ -30,22 +30,23 @@ CREATE TABLE `book`  (
   `ownerid` varchar(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '书籍拥有者的id',
   `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '书籍图片的url',
   `status` int NOT NULL COMMENT '0：已借出；1：在馆',
+  `lenderid` varchar(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '在馆时，借阅者为空字符串',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of book
 -- ----------------------------
-INSERT INTO `book` VALUES (1, 'default', 'testonly', 'vanitas', 'vanitas vanitatum et omnia vanitas', 'sadmin', '/static/images/bookNotFound.png', 1);
-INSERT INTO `book` VALUES (2, 'default', 'testonly', 'vanitas', 'vanitas vanitatum et omnia vanitas', 'sadmin', '/static/images/bookNotFound.png', 1);
-INSERT INTO `book` VALUES (3, 'default', 'testonly', 'vanitas', 'vanitas vanitatum et omnia vanitas', 'sadmin', '/static/images/bookNotFound.png', 1);
-INSERT INTO `book` VALUES (4, 'default', 'testonly', 'vanitas', 'vanitas vanitatum et omnia vanitas', 'sadmin', '/static/images/bookNotFound.png', 1);
-INSERT INTO `book` VALUES (5, 'default', 'testonly', 'vanitas', 'vanitas vanitatum et omnia vanitas', 'sadmin', '/static/images/bookNotFound.png', 1);
-INSERT INTO `book` VALUES (6, '马克思主义基本原理概述', '7040599008', '哲学、政治、马克思', '马克思主义基本原理', 'sadmin', '/static/images/bookNotFound.png', 1);
-INSERT INTO `book` VALUES (7, 'software engineering', '9787040599008', '计算机，软件工程', '软件工程', 'sadmin', '/static/images/bookNotFound.png', 1);
-INSERT INTO `book` VALUES (8, 'test book', '1234567890123', '计算机，软件', '无', 'sadmin', '/static/images/bookNotFound.png', 1);
-INSERT INTO `book` VALUES (9, 'test book', '1234567890123', '计算机，软件', '无', 'sadmin', '/static/images/bookNotFound.png', 1);
-INSERT INTO `book` VALUES (10, 'test book', '1234567890123', '计算机，软件', '无', 'sadmin', '/static/images/bookNotFound.png', 1);
+INSERT INTO `book` VALUES (1, 'default', 'testonly', 'vanitas', 'vanitas vanitatum et omnia vanitas', 'sadmin', '/static/images/bookNotFound.png', 1, ' ');
+INSERT INTO `book` VALUES (2, 'default', 'testonly', 'vanitas', 'vanitas vanitatum et omnia vanitas', 'sadmin', '/static/images/bookNotFound.png', 1, ' ');
+INSERT INTO `book` VALUES (3, 'default', 'testonly', 'vanitas', 'vanitas vanitatum et omnia vanitas', 'sadmin', '/static/images/bookNotFound.png', 1, ' ');
+INSERT INTO `book` VALUES (4, 'default', 'testonly', 'vanitas', 'vanitas vanitatum et omnia vanitas', 'sadmin', '/static/images/bookNotFound.png', 1, ' ');
+INSERT INTO `book` VALUES (5, 'default', 'testonly', 'vanitas', 'vanitas vanitatum et omnia vanitas', 'sadmin', '/static/images/bookNotFound.png', 1, ' ');
+INSERT INTO `book` VALUES (6, '马克思主义基本原理概述', '7040599008', '哲学、政治、马克思', '马克思主义基本原理', 'sadmin', '/static/images/bookNotFound.png', 1, ' ');
+INSERT INTO `book` VALUES (7, 'software engineering', '9787040599008', '计算机，软件工程', '软件工程', 'sadmin', '/static/images/bookNotFound.png', 1, ' ');
+INSERT INTO `book` VALUES (8, 'test book', '1234567890123', '计算机，软件', '无', 'sadmin', '/static/images/bookNotFound.png', 1, ' ');
+INSERT INTO `book` VALUES (9, 'test book', '1234567890123', '计算机，软件', '无', 'sadmin', '/static/images/bookNotFound.png', 1, ' ');
+INSERT INTO `book` VALUES (10, 'test book', '1234567890123', '计算机，软件', '无', 'sadmin', '/static/images/bookNotFound.png', 1, ' ');
 
 -- ----------------------------
 -- Table structure for borrow_list
@@ -79,7 +80,7 @@ CREATE TABLE `borrow_require`  (
   `ownerid` varchar(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '谁的',
   `bookid` int NOT NULL COMMENT '什么书id',
   `bookname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '书名',
-  `status` int NOT NULL COMMENT '0：已发送：1：借书成功：2：借书失败（拒绝或者已被借走）',
+  `status` int NOT NULL COMMENT '0：已发送：1：借书成功：-1：借书失败（拒绝或者已被借走）',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
@@ -105,6 +106,22 @@ CREATE TABLE `message`  (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for notice
+-- ----------------------------
+DROP TABLE IF EXISTS `notice`;
+CREATE TABLE `notice`  (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `announcer` varchar(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '发布者',
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `last_modified` datetime NOT NULL COMMENT '最后修改时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of notice
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for user
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
@@ -119,9 +136,10 @@ CREATE TABLE `user`  (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('admin', 'admin', 'admin', 1);
-INSERT INTO `user` VALUES ('sadmin', 'sadmin', 'sadmin', 0);
-INSERT INTO `user` VALUES ('student', 'student', 'student', 2);
-INSERT INTO `user` VALUES ('teacher', 'teacher', 'teacher', 3);
+INSERT INTO `user` VALUES ('admin', '123', 'admin', 1);
+INSERT INTO `user` VALUES ('pr', '123', '', 0);
+INSERT INTO `user` VALUES ('sadmin', '123', 'sadmin', 0);
+INSERT INTO `user` VALUES ('student', '123', 'student', 2);
+INSERT INTO `user` VALUES ('teacher', '123', 'teacher', 3);
 
 SET FOREIGN_KEY_CHECKS = 1;

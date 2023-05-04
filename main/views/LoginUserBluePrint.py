@@ -60,17 +60,23 @@ def getUserInfo():
     return jsonify(code=200, msg=userInfo)
 
 
-# 修改个人信息
+# 修改个人简介
 @LoginUserBluePrint.route('/account', methods=['PUT'])
 def updataAccount():
-    # 修改用户信息操作,根据传入json信息修改数据库
-    # 前端传入json对象(user类),后端返回简单字符串
-    # 将传入json解包后获得user对象，根据其id进行数据库的修改操作，返回操作是否成功的信息
+    userid = session['userid']
+    data = request.get_json()
+    introduce = data['introduce']
+    userService.updateUser(userid, introduce)
+    return jsonify(code=200, msg="修改成功")
+
+
+# 修改密码
+@LoginUserBluePrint.route('/account', methods=['PUT'])
+def changePassword():
     userid = session['userid']
     data = request.get_json()
     password = data['password']
-    introduce = data['introduce']
-    userService.updateUser(userid, password, introduce)
+    userService.changePassword(userid, password)
     return jsonify(code=200, msg="修改成功")
 
 
@@ -134,6 +140,7 @@ def updateBook():
 
 
 # 上传图片
+# TODO 之后再与上传书籍、修改书籍的接口合并
 @LoginUserBluePrint.route('/uploadImage', methods=['POST'])
 def upload():
     basedir = os.path.abspath(os.path.dirname("./"))  # 当前文件所在路径
@@ -149,7 +156,7 @@ def upload():
 
 # 扫码借书（扫码后跳转到书籍详情界面）,返回数据不分页
 @LoginUserBluePrint.route('/scan/<string:isbn>', methods=['GET'])
-def getBorrowList(isbn):
+def scanCode(isbn):
     books = bookService.searchBookByISBN(isbn)
     return jsonify(code=200, msg=books)
 

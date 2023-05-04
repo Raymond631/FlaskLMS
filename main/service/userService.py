@@ -35,13 +35,20 @@ def deleteUser(userid):
     db.session.commit()
 
 
-def updateUser(userid, password, introduce):
-    User.query.filter(User.id == userid).update({'password': password, 'introduce': introduce})
+def updateUser(userid, introduce):
+    User.query.filter(User.id == userid).update({'introduce': introduce})
+    db.session.commit()
+
+
+def changePassword(userid, password):
+    User.query.filter(User.id == userid).update({'password': password})
     db.session.commit()
 
 
 def selectUserInfo(userid):
-    return User.query.filter(User.id == userid).first()
+    userinfo = User.query.filter(User.id == userid).first()
+    userinfo.password = ""
+    return userinfo
 
 
 def selectAllCommonUser(times):

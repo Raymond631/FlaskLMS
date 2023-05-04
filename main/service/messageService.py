@@ -1,4 +1,5 @@
 from ex import db
+from modules.Notice import Notice
 from modules.message import Message
 
 
@@ -15,3 +16,27 @@ def getmsg(userid, times):
     for message in messagePaginate.items:
         messages.append(message.to_dict())
     return {"num": num, "borrows": messages}
+
+
+def addNotice(announcer, content, lastModified):
+    newNotice = Notice(announcer=announcer, content=content, last_modified=lastModified)
+    db.session.add(newNotice)
+    db.session.commit()
+
+
+def deleteNotice(id):
+    Notice.query.filter(Notice.id == id).delete()
+    db.session.commit()
+
+
+def updateNotice(id, announcer, content, lastModified):
+    Notice.query.filter(Notice.id == id).update({"announcer": announcer, "content": content, "last_modified": lastModified})
+    db.session.commit()
+
+
+def getNotice():
+    noticeList = Notice.query.order_by(Notice.last_modified.desc()).limit(5)
+    notices = []
+    for notice in noticeList:
+        notices.append(notice.to_dict())
+    return notices
