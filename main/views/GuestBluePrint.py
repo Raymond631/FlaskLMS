@@ -33,11 +33,10 @@ def register():
     data = request.get_json()
     userid = data['userid']
     password = data['password']
-    # 默认是普通用户；管理员需要超管修改权限；超管账号唯一，不允许注册
-    # 用户简介默认为空字符串，可在注册后修改
-    if userService.addUser(userid, password):
+    userType = data['userType']
+    if userService.addUser(userid, password, userType):
         session["userid"] = userid
-        session["userType"] = 0
+        session["userType"] = userType
         return jsonify(code=200, msg="注册成功")
     else:
         return jsonify(code=400, msg="用户名已存在")
@@ -63,7 +62,7 @@ def searchBook(searchKey, times):
 """-------------------------查看公告----------------------------------"""
 
 
-# TODO 查看最近5条公告
+# 查看近5条公告
 @GuestBluePrint.route('/notice', methods=['GET'])
 def getNotice():
     notices = messageService.getNotice()

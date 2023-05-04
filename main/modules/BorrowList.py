@@ -7,15 +7,17 @@ class BorrowList(db.Model):  # 对应数据库表borrow_list（驼峰自动映�
     lenderid = db.Column(db.String(12))
     type = db.Column(db.String(255))
     bookid = db.Column(db.Integer, autoincrement=False)
+    bookname = db.Column(db.String(255))
     date = db.Column(db.DateTime)
     return_deadline = db.Column(db.DateTime)
     status = db.Column(db.Integer, autoincrement=False)
 
-    def __init__(self, ownerid, lenderid, type, bookid, date, return_deadline, status):
+    def __init__(self, ownerid, lenderid, type, bookid, bookname, date, return_deadline, status):
         self.ownerid = ownerid
         self.lenderid = lenderid
         self.type = type
         self.bookid = bookid
+        self.bookname = bookname
         self.date = date
         self.return_deadline = return_deadline
         self.status = status

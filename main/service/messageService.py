@@ -1,3 +1,5 @@
+from sqlalchemy import or_
+
 from ex import db
 from modules.Notice import Notice
 from modules.message import Message
@@ -10,10 +12,11 @@ def addmsg(speakerid, receiverid, msg, date):
 
 
 def getmsg(userid, times):
-    messagePaginate = Message.query.filter(Message.speakerid == userid or Message.receiverid == userid).order_by(Message.date.desc()).paginate(page=times, per_page=9, error_out=False)
+    messagePaginate = Message.query.filter(or_(Message.speakerid == userid, Message.receiverid == userid)).order_by(Message.date.desc()).paginate(page=times, per_page=9, error_out=False)
     num = messagePaginate.pages * 9  # 总数(假设每页都满，对前端没影响)
     messages = []
     for message in messagePaginate.items:
+        message.date = message.date.strftime('%Y-%m-%d %H:%M:%S')
         messages.append(message.to_dict())
     return {"num": num, "borrows": messages}
 
@@ -38,5 +41,6 @@ def getNotice():
     noticeList = Notice.query.order_by(Notice.last_modified.desc()).limit(5)
     notices = []
     for notice in noticeList:
+        notice.date = notice.date.strftime('%Y-%m-%d %H:%M:%S')
         notices.append(notice.to_dict())
     return notices

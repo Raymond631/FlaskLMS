@@ -13,13 +13,12 @@ def getAllBooks(bookType, times):
     return {"num": num, "books": books}
 
 
-def getMyBooks(userid, times):
-    bookPaginate = Book.query.filter(Book.ownerid == userid).paginate(page=times, per_page=9, error_out=False)
-    num = bookPaginate.pages * 9  # 总数(假设每页都满，对前端没影响)
+def getMyBooks(userid):
+    booklist = Book.query.filter(Book.ownerid == userid).all()
     books = []
-    for book in bookPaginate.items:
+    for book in booklist:
         books.append(book.to_dict())
-    return {"num": num, "books": books}
+    return books
 
 
 def searchBook(searchKey, times):
@@ -39,44 +38,42 @@ def addBook(name, isbncode, type, introduce, ownerid, image, status):
 
 
 def deleteBook(bookId, ownerid):
-    Book.query.filter(Book.id == bookId and Book.ownerid == ownerid).delete()
+    Book.query.filter(Book.id == bookId, Book.ownerid == ownerid).delete()
     db.session.commit()
 
 
 def updateBook(ownerid, id, name, isbncode, type, introduce, image):
-    Book.query.filter(Book.id == id and Book.ownerid == ownerid).update({"name": name, "isbncode": isbncode, "type": type, "introduce": introduce, "image": image})
+    Book.query.filter(Book.id == id, Book.ownerid == ownerid).update({"name": name, "isbncode": isbncode, "type": type, "introduce": introduce, "image": image})
     db.session.commit()
 
 
-# 根据最近借的一本书的类型进行推荐
-def recommendBooks(userid, times):
+def recommendBooks(userid):
     # 查询最近借的一本书的type
-    # TODO 如果用户没借过书怎么办？
-    lendBookType = BorrowList.query.filter(BorrowList.lenderid == userid).order_by(BorrowList.date.desc()).first().type
-    bookPaginate = Book.query.filter(Book.type == lendBookType).paginate(page=times, per_page=9, error_out=False)
-    num = bookPaginate.pages * 9  # 总数
+    lendBook = BorrowList.query.filter(BorrowList.lenderid == userid).order_by(BorrowList.date.desc()).first()
+    if lendBook:
+        booklist = Book.query.filter(Book.type == lendBook.type).order_by(Book.id.desc()).limit(6)
+    else:
+        booklist = Book.query.order_by(Book.id.desc()).limit(6)
     books = []
-    for book in bookPaginate.items:
+    for book in booklist:
         books.append(book.to_dict())
-    return {"num": num, "books": books}
+    return books
 
 
-def getRequireMe(ownerid, times):
-    requirePaginate = BorrowRequire.query.filter(BorrowRequire.ownerid == ownerid).order_by(BorrowRequire.id.desc()).paginate(page=times, per_page=9, error_out=False)
-    num = requirePaginate.pages * 9  # 总数(假设每页都满，对前端没影响)
+def getRequireMe(ownerid):
+    requirelist = BorrowRequire.query.filter(BorrowRequire.ownerid == ownerid).order_by(BorrowRequire.id.desc()).all()
     requires = []
-    for require in requirePaginate.items:
+    for require in requirelist:
         requires.append(require.to_dict())
-    return {"num": num, "books": requires}
+    return requires
 
 
-def getMyRequire(lenderid, times):
-    requirePaginate = BorrowRequire.query.filter(BorrowRequire.lenderid == lenderid).order_by(BorrowRequire.id.desc()).paginate(page=times, per_page=9, error_out=False)
-    num = requirePaginate.pages * 9  # 总数(假设每页都满，对前端没影响)
+def getMyRequire(lenderid):
+    requirelist = BorrowRequire.query.filter(BorrowRequire.lenderid == lenderid).order_by(BorrowRequire.id.desc()).all()
     requires = []
-    for require in requirePaginate.items:
+    for require in requirelist:
         requires.append(require.to_dict())
-    return {"num": num, "books": requires}
+    return requires
 
 
 def sendRequire(lenderid, ownerid, bookid, bookname, status):
@@ -85,28 +82,28 @@ def sendRequire(lenderid, ownerid, bookid, bookname, status):
     db.session.commit()
 
 
-def checkRequire(id, bookid, requireStatus):
+def checkRequire(userid, id, bookid, requireStatus):
     if requireStatus == 1:  # 同意
         book = Book.query.filter(Book.id == bookid).first()
         if book.status == 1:  # 未被借走
-            require = BorrowRequire.query.filter(BorrowRequire.id == id).first()
+            require = BorrowRequire.query.filter(BorrowRequire.id == id, BorrowRequire.ownerid == userid).first()
             book.lenderid = require.lenderid
             book.status = 0  # 改为已借出，不在馆
             require.status = 1  # 改为借书申请通过
             db.session.commit()
             return 1
         else:  # 已经被借走
-            BorrowRequire.query.filter(BorrowRequire.id == id).update({"status": -1})
+            BorrowRequire.query.filter(BorrowRequire.id == id, BorrowRequire.ownerid == userid).update({"status": -1})
             db.session.commit()
             return 0
     else:
-        BorrowRequire.query.filter(BorrowRequire.id == id).update({"status": -1})
+        BorrowRequire.query.filter(BorrowRequire.id == id, BorrowRequire.ownerid == userid).update({"status": -1})
         db.session.commit()
         return -1
 
 
-def returnBookToMe(bookid):
-    Book.query.filter(Book.id == bookid).update({"status": 1, "lenderid": ""})
+def returnBookToMe(userid, bookid):
+    Book.query.filter(Book.id == bookid, Book.ownerid == userid).update({"status": 1, "lenderid": ""})
     db.session.commit()
 
 

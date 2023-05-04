@@ -19,10 +19,10 @@ def checkUser(userid, password):
 
 
 # 添加用户
-def addUser(userid, password):
+def addUser(userid, password, userType):
     user = User.query.filter(User.id == userid).first()
     if user is None:
-        newUser = User(uid=userid, password=password, introduce='', type=0)
+        newUser = User(uid=userid, password=password, introduce='', type=userType)
         db.session.add(newUser)
         db.session.commit()
         return True
@@ -48,32 +48,31 @@ def changePassword(userid, password):
 def selectUserInfo(userid):
     userinfo = User.query.filter(User.id == userid).first()
     userinfo.password = ""
-    return userinfo
+    return userinfo.to_dict()
 
 
-def selectAllCommonUser(times):
+def selectAllCommonUser():
     # 查看除了超管外的所有用户
-    userPaginate = User.query.filter(User.type != 2).paginate(page=times, per_page=9, error_out=False)
-    num = userPaginate.pages * 9  # 总数(假设每页都满，对前端没影响)
+    userlist = User.query.filter(User.type != 0).all()
     users = []
-    for user in userPaginate.items:
+    for user in userlist:
         users.append(user.to_dict())
-    return {"num": num, "users": users}
+    return users
 
 
-def selectAllUser(times):
-    userPaginate = User.query.paginate(page=times, per_page=9, error_out=False)
-    num = userPaginate.pages * 9  # 总数(假设每页都满，对前端没影响)
+def selectAllUser():
+    userlist = User.query.all()
     users = []
-    for user in userPaginate.items:
+    for user in userlist:
         users.append(user.to_dict())
-    return {"num": num, "users": users}
+    return users
 
 
 def resetPassword(userid, password):
     User.query.filter(User.id == userid).update({'password': password})
+    db.session.commit()
 
 
 def updataUserTpye(userid, newUserType):
-    User.query.filter(User.id == userid).update({'newUserType': newUserType})
+    User.query.filter(User.id == userid).update({'type': newUserType})
     db.session.commit()

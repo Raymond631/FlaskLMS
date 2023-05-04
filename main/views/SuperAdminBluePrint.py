@@ -24,25 +24,17 @@ def before():
 
 
 # 超管查看
-@SuperAdminBluePrint.route('/adminList/<int:times>', methods=['GET'])
-def getAdminList(times):
-    userType = session["userType"]
-    if userType == 0:  # 只有超管能访问
-        users = userService.selectAllUser(times)  # 能查看所有的用户
-        return jsonify(code=200, msg=users)
-    else:
-        return jsonify(code=400, msg="您没有权限访问此页面")
+@SuperAdminBluePrint.route('/adminList', methods=['GET'])
+def getAdminList():
+    users = userService.selectAllUser()  # 能查看所有的用户
+    return jsonify(code=200, msg=users)
 
 
 # 超管修改
 @SuperAdminBluePrint.route('/adminList', methods=['PUT'])
 def updataUserTpye():
-    userType = session["userType"]
-    if userType == 0:  # 只有超管能访问
-        data = request.get_json()
-        userid = data['userid']
-        newUserType = data['newUserType']
-        userService.updataUserTpye(userid, newUserType)
-        return jsonify(code=200, msg="用户权限修改成功")
-    else:
-        return jsonify(code=400, msg="您没有权限访问此页面")
+    data = request.get_json()
+    userid = data['userid']
+    newUserType = data['newUserType']
+    userService.updataUserTpye(userid, newUserType)
+    return jsonify(code=200, msg="用户权限修改成功")
