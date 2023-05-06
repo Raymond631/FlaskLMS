@@ -66,6 +66,7 @@ def getBorrowList(lenderid):
     borrows = []
     for borrow in borrowlist:
         borrow.date = borrow.date.strftime('%Y-%m-%d %H:%M:%S')
+        borrow.return_deadline = borrow.return_deadline.strftime('%Y-%m-%d %H:%M:%S')
         borrows.append(borrow.to_dict())
     return borrows
 
