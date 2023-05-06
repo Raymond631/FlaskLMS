@@ -10,12 +10,12 @@ from views.SuperAdminBluePrint import SuperAdminBluePrint
 
 def createApp():
     app = Flask(__name__)
-    app.secret_key = 'whatu149isilike'
+    app.secret_key = 'whatu149isilike'  # session密钥
+
     CORS(app, supports_credentials=True)
 
     # 配置数据库设置
     DBconfig(app)
-
     # 配置路径及蓝图
     addRoute(app)
     return app

@@ -75,14 +75,6 @@ def changePassword():
 """-----------------------书籍管理接口，图书馆和C2C通用------------------------------"""
 
 
-# 根据最近借的一本书的类型进行推荐,如果没借过，就推荐一些新书
-@LoginUserBluePrint.route('/recommendBooks', methods=['GET'])
-def recommendBooks():
-    userid = session['userid']
-    books = bookService.recommendBooks(userid)
-    return jsonify(code=200, msg=books)
-
-
 # 添加书籍
 @LoginUserBluePrint.route('/book', methods=['POST'])
 def addBook():

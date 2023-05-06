@@ -45,6 +45,17 @@ def register():
 """-------------------------查看书籍----------------------------------"""
 
 
+# 根据最近借的一本书的类型进行推荐,如果没借过，就推荐一些新书
+@GuestBluePrint.route('/recommendBooks', methods=['GET'])
+def recommendBooks():
+    if 'userid' in session:
+        userid = session['userid']
+    else:
+        userid = ''
+    books = bookService.recommendBooks(userid)
+    return jsonify(code=200, msg=books)
+
+
 # 查看某类书籍
 @GuestBluePrint.route('/books/<string:bookType>/<int:times>', methods=['GET'])
 def getBooks(bookType, times):
