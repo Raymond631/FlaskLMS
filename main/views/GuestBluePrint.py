@@ -24,7 +24,7 @@ def login():  # 方法名不能用session
     else:
         session["userid"] = userid
         session["userType"] = code  # 存放账号类型，用于区分权限
-        return jsonify(code=200, msg="登录成功")
+        return jsonify(code=200, msg="登录成功", userType=code)
 
 
 # 注册
@@ -37,7 +37,7 @@ def register():
     if userService.addUser(userid, password, userType):
         session["userid"] = userid
         session["userType"] = userType
-        return jsonify(code=200, msg="注册成功")
+        return jsonify(code=200, msg="注册成功", userType=userType)
     else:
         return jsonify(code=400, msg="用户名已存在")
 
