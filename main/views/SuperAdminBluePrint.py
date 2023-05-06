@@ -26,7 +26,7 @@ def before():
 # 超管查看
 @SuperAdminBluePrint.route('/adminList', methods=['GET'])
 def getAdminList():
-    users = userService.selectAllUser()  # 能查看所有的用户
+    users = userService.selectAllCommonUser()
     return jsonify(code=200, msg=users)
 
 
