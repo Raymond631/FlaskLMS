@@ -110,16 +110,16 @@ def updateBook():
     return jsonify(code=200, msg="修改成功")
 
 
-# # 上传图片
-# # TODO 之后再与上传书籍、修改书籍的接口合并
-# @LoginUserBluePrint.route('/uploadImage', methods=['POST'])
-# def upload():
-#     basedir = os.path.abspath(os.path.dirname("./"))  # 当前文件所在路径
-#     ran_str = ''.join(random.sample(string.ascii_letters + string.digits, 16))  # 随机字符串，防止重名
-#     image = request.files.get('image')
-#     imagePath = "/static/images/" + ran_str + image.filename
-#     image.save(basedir + imagePath)
-#     return jsonify(code=200, imagePath=imagePath)
+# 上传图片
+# TODO 之后再与上传书籍、修改书籍的接口合并
+@LoginUserBluePrint.route('/uploadImage', methods=['POST'])
+def upload():
+    basedir = os.path.abspath(os.path.dirname("./"))  # 当前文件所在路径
+    ran_str = ''.join(random.sample(string.ascii_letters + string.digits, 16))  # 随机字符串，防止重名
+    image = request.files.get('image')
+    imagePath = "/static/images/" + ran_str + image.filename
+    image.save(basedir + imagePath)
+    return jsonify(code=200, imagePath=imagePath)
 
 
 """----------------------------------图书馆借书-------------------------------"""
