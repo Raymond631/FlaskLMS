@@ -11,18 +11,17 @@ def addmsg(speakerid, receiverid, msg, date):
     db.session.commit()
 
 
-def getmsg(userid, chatPerson, times):
-    messagePaginate = Message.query.filter(
+def getmsg(userid, chatPerson):
+    messagelist = Message.query.filter(
         or_(
             and_(Message.speakerid == userid, Message.receiverid == chatPerson),
             and_(Message.speakerid == chatPerson, Message.receiverid == userid))
-    ).order_by(Message.date.desc()).paginate(page=times, per_page=9, error_out=False)
-    num = messagePaginate.pages * 9  # 总数(假设每页都满，对前端没影响)
+    ).order_by(Message.date.desc()).all()
     messages = []
-    for message in messagePaginate.items:
+    for message in messagelist:
         message.date = message.date.strftime('%Y-%m-%d %H:%M:%S')
         messages.append(message.to_dict())
-    return {"num": num, "borrows": messages}
+    return messages
 
 
 def addNotice(announcer, content, lastModified):

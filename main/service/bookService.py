@@ -72,7 +72,11 @@ def getMyRequire(lenderid):
     requirelist = BorrowRequire.query.filter(BorrowRequire.lenderid == lenderid).order_by(BorrowRequire.id.desc()).all()
     requires = []
     for require in requirelist:
-        requires.append(require.to_dict())
+        temp = require.to_dict()
+        bookid = require.bookid
+        book = Book.query.filter(Book.id == bookid).first()
+        temp["bookDetail"] = book.to_dict()
+        requires.append(temp)
     return requires
 
 

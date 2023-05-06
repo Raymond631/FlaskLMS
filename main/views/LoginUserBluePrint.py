@@ -246,11 +246,8 @@ def sendMsg():
     return jsonify(code=200, msg="发送成功")
 
 
-@LoginUserBluePrint.route('/chat/<string:chatPerson>/<int:times>', methods=['GET'])
-def getMsg(chatPerson, times):
-    # 对某一个人收发的信息进行查询
-    # 前端通过ajax传入json(含(searchKey)和(times)),后端返回json
-    # 从数据库中搜索searchKey相关数据(包括其作为寄信人和收信人),将搜索到的message对象根据times作为List并打包为json传出
+@LoginUserBluePrint.route('/chat/<string:chatPerson>', methods=['GET'])
+def getMsg(chatPerson):
     userid = session['userid']
-    msgs = messageService.getmsg(userid, chatPerson, times)
+    msgs = messageService.getmsg(userid, chatPerson)
     return jsonify(code=200, msg=msgs)
