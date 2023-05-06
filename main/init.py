@@ -1,4 +1,6 @@
 from flask import Flask
+from flask_cors import *
+
 from ex import db
 from views.AdminBluePrint import AdminBluePrint
 from views.GuestBluePrint import GuestBluePrint
@@ -9,6 +11,7 @@ from views.SuperAdminBluePrint import SuperAdminBluePrint
 def createApp():
     app = Flask(__name__)
     app.secret_key = 'whatu149isilike'
+    CORS(app, supports_credentials=True)
 
     # 配置数据库设置
     DBconfig(app)

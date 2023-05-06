@@ -107,9 +107,10 @@ def returnBookToMe(userid, bookid):
     db.session.commit()
 
 
-def searchBookByISBN(isbn):
-    booklist = Book.query.filter(Book.isbncode == isbn).all()
+def searchBookByISBN(isbn, times):
+    bookPaginate = Book.query.filter(Book.isbncode == isbn).paginate(page=times, per_page=9, error_out=False)
+    num = bookPaginate.pages * 9  # 总数
     books = []
-    for book in booklist:
+    for book in bookPaginate.items:
         books.append(book.to_dict())
-    return books
+    return {"num": num, "books": books}

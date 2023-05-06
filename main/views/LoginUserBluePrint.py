@@ -134,9 +134,9 @@ def updateBook():
 
 
 # 扫码借书（扫码后返回isbn搜书结果，返回数据不分页）
-@LoginUserBluePrint.route('/scan/<string:isbn>', methods=['GET'])
-def scanCode(isbn):
-    books = bookService.searchBookByISBN(isbn)
+@LoginUserBluePrint.route('/scan/<string:isbn>/<int:times>', methods=['GET'])
+def scanCode(isbn, times):
+    books = bookService.searchBookByISBN(isbn, times)
     return jsonify(code=200, msg=books)
 
 
