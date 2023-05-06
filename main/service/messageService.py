@@ -1,4 +1,4 @@
-from sqlalchemy import or_
+from sqlalchemy import or_, and_
 
 from ex import db
 from modules.Notice import Notice
@@ -11,8 +11,12 @@ def addmsg(speakerid, receiverid, msg, date):
     db.session.commit()
 
 
-def getmsg(userid, times):
-    messagePaginate = Message.query.filter(or_(Message.speakerid == userid, Message.receiverid == userid)).order_by(Message.date.desc()).paginate(page=times, per_page=9, error_out=False)
+def getmsg(userid, chatPerson, times):
+    messagePaginate = Message.query.filter(
+        or_(
+            and_(Message.speakerid == userid, Message.receiverid == chatPerson),
+            and_(Message.speakerid == chatPerson, Message.receiverid == userid))
+    ).order_by(Message.date.desc()).paginate(page=times, per_page=9, error_out=False)
     num = messagePaginate.pages * 9  # 总数(假设每页都满，对前端没影响)
     messages = []
     for message in messagePaginate.items:
