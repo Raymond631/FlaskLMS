@@ -44,6 +44,6 @@ def getNotice():
     noticeList = Notice.query.order_by(Notice.last_modified.desc()).limit(5)
     notices = []
     for notice in noticeList:
-        notice.date = notice.date.strftime('%Y-%m-%d %H:%M:%S')
+        notice.last_modified = notice.last_modified.strftime('%Y-%m-%d %H:%M:%S')
         notices.append(notice.to_dict())
     return notices
