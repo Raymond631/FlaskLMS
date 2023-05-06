@@ -11,7 +11,7 @@
  Target Server Version : 80032 (8.0.32)
  File Encoding         : 65001
 
- Date: 05/05/2023 00:08:37
+ Date: 06/05/2023 20:21:23
 */
 
 SET NAMES utf8mb4;
@@ -32,7 +32,7 @@ CREATE TABLE `book`  (
   `status` int NOT NULL COMMENT '0：已借出；1：在馆',
   `lenderid` varchar(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '在馆时，借阅者为空字符串',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of book
@@ -44,10 +44,11 @@ INSERT INTO `book` VALUES (4, 'default', 'testonly', 'vanitas', 'vanitas vanitat
 INSERT INTO `book` VALUES (5, 'default', 'testonly', 'vanitas', 'vanitas vanitatum et omnia vanitas', 'sadmin', '/static/images/bookNotFound.png', 1, ' ');
 INSERT INTO `book` VALUES (6, '马克思主义基本原理概述', '7040599008', '哲学、政治、马克思', '马克思主义基本原理', 'sadmin', '/static/images/bookNotFound.png', 1, ' ');
 INSERT INTO `book` VALUES (7, 'software engineering', '9787040599008', '计算机，软件工程', '软件工程', 'sadmin', '/static/images/bookNotFound.png', 1, ' ');
-INSERT INTO `book` VALUES (8, 'test book', '1234567890123', '计算机，软件', '无', 'sadmin', '/static/images/bookNotFound.png', 1, ' ');
-INSERT INTO `book` VALUES (9, 'test book', '1234567890123', '计算机，软件', '无', 'sadmin', '/static/images/bookNotFound.png', 1, ' ');
-INSERT INTO `book` VALUES (10, 'test book', '1234567890123', '计算机，软件', '无', 'sadmin', '/static/images/bookNotFound.png', 1, ' ');
+INSERT INTO `book` VALUES (8, 'test 1', '1234567890123', '计算机，软件', '无', 'sadmin', '/static/images/bookNotFound.png', 1, ' ');
+INSERT INTO `book` VALUES (9, 'test 2', '1234567890123', '计算机，软件', '无', 'sadmin', '/static/images/bookNotFound.png', 1, ' ');
+INSERT INTO `book` VALUES (10, 'test 3', '1234567890123', '计算机，软件', '无', 'sadmin', '/static/images/bookNotFound.png', 1, ' ');
 INSERT INTO `book` VALUES (15, '软工', '1112223334445', '软件', '介绍', 'student', '/static/images/b.txt', 1, '');
+INSERT INTO `book` VALUES (16, '123345', '456', '789', '123', 'pr', '/static/images/tfZ1cRXexI8yJkbp头像.jpg', 1, '');
 
 -- ----------------------------
 -- Table structure for borrow_list
@@ -145,10 +146,20 @@ CREATE TABLE `user`  (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
+INSERT INTO `user` VALUES ('123', '123', '', 2);
+INSERT INTO `user` VALUES ('12334', '12', '', 2);
+INSERT INTO `user` VALUES ('123abc', '123', '', 2);
 INSERT INTO `user` VALUES ('admin', '123', 'admin', 1);
+INSERT INTO `user` VALUES ('hhh', '123', '', 2);
+INSERT INTO `user` VALUES ('kl', '123', '', 2);
+INSERT INTO `user` VALUES ('nv', '123', '', 2);
 INSERT INTO `user` VALUES ('pr', '123456', '', 2);
+INSERT INTO `user` VALUES ('pr123', '123', '', 2);
+INSERT INTO `user` VALUES ('prabd', '123', '', 2);
 INSERT INTO `user` VALUES ('sadmin', '123', 'sadmin', 0);
 INSERT INTO `user` VALUES ('student', 'abcd', '新的个人简介', 2);
 INSERT INTO `user` VALUES ('teacher', '123', 'teacher', 3);
+INSERT INTO `user` VALUES ('ye', '123', '', 2);
+INSERT INTO `user` VALUES ('yey', '123', '', 2);
 
 SET FOREIGN_KEY_CHECKS = 1;
