@@ -90,7 +90,14 @@ def checkRequire(userid, id, bookid, requireStatus):
     if requireStatus == 1:  # 同意
         book = Book.query.filter(Book.id == bookid).first()
         if book.status == 1:  # 未被借走
-            require = BorrowRequire.query.filter(BorrowRequire.id == id, BorrowRequire.ownerid == userid).first()
+            print('---------------------------------------------------------------')
+            '''print(userid)'''
+            print('id:'+id)
+            '''print(bookid)
+            print(requireStatus)'''
+            print(book.lenderid)
+            require = BorrowRequire.query.filter(BorrowRequire.lenderid == id, BorrowRequire.ownerid == userid).first()
+            print(require.__class__)
             book.lenderid = require.lenderid
             book.status = 0  # 改为已借出，不在馆
             require.status = 1  # 改为借书申请通过

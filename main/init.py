@@ -32,7 +32,7 @@ def addRoute(app):
 
 def DBconfig(app):
     # 设置数据库连接地址
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://Raymond:123456@127.0.0.1:3306/librarymanage'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:ZpC498420459@127.0.0.1:3306/librarymanage'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SQLALCHEMY_ECHO'] = True
     db.init_app(app)

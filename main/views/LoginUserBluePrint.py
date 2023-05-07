@@ -195,9 +195,14 @@ def c2cGetRequireMe():
 
 
 # 拥有者审核借书申请（同意、拒绝）
-@LoginUserBluePrint.route('/books/checkRequire/<int:requireId>/<int:bookId>/<int:status>', methods=['PUT'])
+@LoginUserBluePrint.route('/books/checkRequire/<string:requireId>/<int:bookId>/<int:status>', methods=['PUT'])
 def checkRequire(requireId, bookId, status):
     userid = session['userid']
+    '''print('------------------------------------test---------------------------------------------------------')
+    print(userid)
+    print(requireId)
+    print(bookId)
+    print(status)'''
     code = bookService.checkRequire(userid, requireId, bookId, status)
     if code == 1:
         return jsonify(code=200, msg="借出成功")
@@ -205,6 +210,8 @@ def checkRequire(requireId, bookId, status):
         return jsonify(code=400, msg="拒绝成功")
     elif code == 0:
         return jsonify(code=200, msg="借出失败，该书已被借走")
+
+
 
 
 # 查看我发送的借书申请（如果拥有者同意了，借书人点击拥有者的userid跳转到聊天界面，协商取书时间地点）
