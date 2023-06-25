@@ -1,3 +1,6 @@
+# 前端仓库地址
+https://github.com/PRay011/LMS-VUE.git
+
 # FlaskLM项目文档
 FlaskLiblalyManane项目采用前后端分离开发方式，接口为restful风格接口
 # 模块功能分析
